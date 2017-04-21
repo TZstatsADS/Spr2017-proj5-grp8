@@ -1,0 +1,48 @@
+---
+title: "Image Anlysis"
+author: "Xuehan Liu (xl2615)"
+date: "4/21/2017"
+output: pdf_document
+---
+
+###Load libraries
+```{r}
+library(EBImage)
+#install.packages("jpeg")
+library(jpeg)
+library(OpenImageR)
+```
+
+###Plot Image
+
+```{r}
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
+
+
+pic1 <- readJPEG("/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/pic1.jpg")
+dim(pic1) # Gives levels of red, green, blue
+
+op <- par(bg = "thistle")
+plot(c(1, 2), c(1, 2), type = "n", xlab = "", ylab = "")
+rasterImage(pic1, 1, 1, 2, 2)
+```
+
+
+###Extract HoG Feature from images
+
+```{r}
+source("../lib/HOGFeature.R")
+experiment_dir <- "../data/"
+img_train_dir <- paste(experiment_dir, "image/", sep="")
+h<-feature(img_train_dir,export=T)
+
+```
+
+###Implement MultinomialEM 
+
+```{r}
+source("../lib/MultinomialEM.R")
+MultinomialEM(h,K=5) 
+```
+
+

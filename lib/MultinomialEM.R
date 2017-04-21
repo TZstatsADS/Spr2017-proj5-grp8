@@ -1,6 +1,6 @@
-H<-H+0.01
+
 MultinomialEM <- function(H, K, tau=0.1){
-  
+  H<-H+0.01
   index<-sample(1:nrow(H),K)
   t_k<-H[index,]
   for (i in 1:nrow(t_k)){
