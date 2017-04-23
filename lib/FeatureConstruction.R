@@ -2,6 +2,7 @@
 #input: my.dat is a n by m matrix, where n is the number of observations, and m is the possible features we can work on
 my.dat = read.csv("../output/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
 
+#my.dat = read.csv("../output/testing.csv",header = TRUE, stringsAsFactors = FALSE)
 History = c("Christ","Muhammad","Cross","Crusade","Jerusalem","Maria","Virgin","holy","Trinity","Judgement","God", "Jesus","Zeus",
                        "Hera","Poseidon","Demeter","Ares","Athena","Apollo","Artemis","Hephaestus","Aphrodite","Hermes","Dionysus","Hades","Hypnos",
                        "Nike","Janus","Nemesis","Iris","Hecate","Tyche", "Jupiter", "Neptune", "Juno", "Mars", "Venus", "Bellona", "Minerva", "Janus", 
@@ -67,29 +68,52 @@ variable.type = apply(score,1,which.max)
 
 
 
-#After data cleanning
+######################After data cleanning run this
 variable.diff = (as.numeric(my.dat$highEst) - as.numeric(my.dat$lowEst))/as.numeric(my.dat$lowEst)
-
+#######################
 
 #lot-description
+
+#Deal with figure by figure inches/inch.
 Famous = c("signed","inscribed","stamped","marked")
-variable.famous = rep(0,411)
-                     # dim(my.dat)[1])
-for(i in 1 : 411)
+variable.famous = rep(0,400)
+variable.height = c()
+variable.width = c()
+testing = list()           # dim(my.dat)[1])
+for(i in 1 : 400)
     #dim(my.dat)[1])#Change 500 to appropriate number of observations
 {
   my.dat$lot_desc[i] = gsub("[()]","",my.dat$lot_desc[i])
+  upper.bound = gregexpr("[i]{1}[n]{1}[.]?[c]+[h]+[e]+[s]+",my.dat$lot_desc[i])[[1]][1]
+  low.bound = upper.bound - 20
+  index = gregexpr("[0-9]+[/]?[1-9]?",my.dat$lot_desc[i])
+  figures = unlist(regmatches(my.dat$lot_desc[i],gregexpr("[0-9]+[/]?[1-9]?",my.dat$lot_desc[i])))
+  figures = figures[index[[1]] > low.bound & index[[1]] < upper.bound]
+  testing[[i]] = figures
   info = unlist(strsplit(my.dat$lot_desc[i],split = " "))
-  n = length(n)
+  n = length(info)
   for(j in 1 : n)
   {
-    if(info[j]%in%Famous)
+    if(info[j]%in%Famous) #Possible errror info might be null
     {
       variable.famous[i] = 1
       break
     }
   }
-  by.location = which(info=="by")[1]
-  size.start = by.location - 4
+  n = length(figures)
+  index = c()
+  for(k in 1 : n){
+    figures[which(is.na(figures))] = 0
+    if(regexpr("/",figures[k])[[1]] != -1){
+      first = as.numeric(unlist(strsplit(figures[k],split="/")))[1]
+      second = as.numeric(unlist(strsplit(figures[k],split="/")))[2]
+      figures[k-1] = as.numeric(figures[k-1]) + (first/second)
+    }else{
+    figures[k] = as.numeric(figures[k])
+    index = c(index,k)}
+  }
+  figures = as.numeric(figures[index])
+  variable.height[i] = figures[1]
+  variable.width[i] = figures[2]
 }
 
