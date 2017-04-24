@@ -76,15 +76,16 @@ variable.diff = (as.numeric(my.dat$highEst) - as.numeric(my.dat$lowEst))/as.nume
 
 #Deal with figure by figure inches/inch.
 Famous = c("signed","inscribed","stamped","marked")
-variable.famous = rep(0,400)
-variable.height = c()
-variable.width = c()
+variable.famous = rep(0,dim(my.dat)[1])
+variable.height = rep(NA,dim(my.dat)[1])
+variable.width = rep(NA,dim(my.dat)[1])
 testing = list()           # dim(my.dat)[1])
-for(i in 1 : 400)
+for(i in 1 : dim(my.dat)[1])
     #dim(my.dat)[1])#Change 500 to appropriate number of observations
 {
   my.dat$lot_desc[i] = gsub("[()]","",my.dat$lot_desc[i])
   upper.bound = gregexpr("[i]{1}[n]{1}[.]?[c]+[h]+[e]+[s]+",my.dat$lot_desc[i])[[1]][1]
+  if(upper.bound != -1){
   low.bound = upper.bound - 20
   index = gregexpr("[0-9]+[/]?[1-9]?",my.dat$lot_desc[i])
   figures = unlist(regmatches(my.dat$lot_desc[i],gregexpr("[0-9]+[/]?[1-9]?",my.dat$lot_desc[i])))
@@ -115,5 +116,6 @@ for(i in 1 : 400)
   figures = as.numeric(figures[index])
   variable.height[i] = figures[1]
   variable.width[i] = figures[2]
+  }
 }
 
