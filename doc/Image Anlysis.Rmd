@@ -17,7 +17,7 @@ library(OpenImageR)
 
 ```{r}
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
-
+getwd()
 
 pic1 <- readJPEG("/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/pic1.jpg")
 dim(pic1) # Gives levels of red, green, blue
@@ -31,44 +31,31 @@ rasterImage(pic1, 1, 1, 2, 2)
 ###Extract HoG Features from images
 
 ```{r}
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
 source("../lib/HOGFeature.R")
-experiment_dir <- "../data/"
-img_train_dir <- paste(experiment_dir, "images/", sep="")
-h<-hogfeature(img_train_dir,export=T)
-
+experiment_dir <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/"
+img_dir <- paste(experiment_dir, "Images/", sep="")
+h<-hogfeature(img_dir,export=T)
+#source(".../output/HOG.RData")
 ```
 
 ###Extract RGB Features from images 
 
 ```{r}
-source("../lib/RGBfeature.R")
-rgb<-rgbfeature(img_train_dir)
-
-#rgbfeature<-function(){
-  
-
-
-# Required packages
-library(biOps)
-library(raster)
-
-# Load and plot data
-#data(logo)
-experiment_dir <- "../data/"
-jpg <- paste(experiment_dir, "images/", sep="")
+#setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
+source("/Users/xuehan/Desktop/Spr2017-proj5-grp8/lib/RGBfeature.R")
+experiment_dir2 <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/"
+img_dir2 <- paste(experiment_dir2, "Images", sep="")
+#file.rename(list.files(pattern="american-art-n09633_*.img",paste0("american-art-n09633_", 1:143)))
+rgb<-rgbfeature(img_dir2,"american-art-n09633")
 
 
-plot.imagedata(jpg)
+a<-"../data/Images/american-art-n09633_0001.jpg"
+readJPEG(a)
 
-# Convert imagedata to raster
-rst.blue <- raster(jpg[,,1])
-rst.green <- raster(jpg[,,2])
-rst.red <- raster(jpg[,,3])
-
-# Plot single raster images and RGB composite
-plot(stack(rst.blue, rst.green, rst.red), 
-     main = c("Blue band", "Green band", "Red band"))
-plotRGB(stack(rst.blue, rst.green, rst.red))
+length(list.files(paste0(img_dir2,"Images")))
+getwd()
+#rgb<-rgbfeature(img_dir2,"master-paintings-19th-century-european-n09600")
 ```
 
 
