@@ -10,7 +10,7 @@ if(!require(EBImage)){
   library(EBImage)
 }
 
-feature <- function(img_dir, img_name){
+rgbfeature <- function(img_dir, img_name){
   
   ### Construct RGB features for training/testing images
   

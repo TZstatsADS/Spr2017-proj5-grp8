@@ -28,21 +28,47 @@ rasterImage(pic1, 1, 1, 2, 2)
 ```
 
 
-###Extract HoG Feature from images
+###Extract HoG Features from images
 
 ```{r}
 source("../lib/HOGFeature.R")
 experiment_dir <- "../data/"
-img_train_dir <- paste(experiment_dir, "image/", sep="")
-h<-feature(img_train_dir,export=T)
+img_train_dir <- paste(experiment_dir, "images/", sep="")
+h<-hogfeature(img_train_dir,export=T)
 
 ```
 
-###Implement MultinomialEM 
+###Extract RGB Features from images 
 
 ```{r}
-source("../lib/MultinomialEM.R")
-MultinomialEM(h,K=5) 
+source("../lib/RGBfeature.R")
+rgb<-rgbfeature(img_train_dir)
+
+#rgbfeature<-function(){
+  
+
+
+# Required packages
+library(biOps)
+library(raster)
+
+# Load and plot data
+#data(logo)
+experiment_dir <- "../data/"
+jpg <- paste(experiment_dir, "images/", sep="")
+
+
+plot.imagedata(jpg)
+
+# Convert imagedata to raster
+rst.blue <- raster(jpg[,,1])
+rst.green <- raster(jpg[,,2])
+rst.red <- raster(jpg[,,3])
+
+# Plot single raster images and RGB composite
+plot(stack(rst.blue, rst.green, rst.red), 
+     main = c("Blue band", "Green band", "Red band"))
+plotRGB(stack(rst.blue, rst.green, rst.red))
 ```
 
 
