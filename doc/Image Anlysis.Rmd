@@ -45,16 +45,11 @@ h<-hogfeature(img_dir,export=T)
 #setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
 source("/Users/xuehan/Desktop/Spr2017-proj5-grp8/lib/RGBfeature.R")
 experiment_dir2 <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/"
+experiment_dir3 <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/Images"
 img_dir2 <- paste(experiment_dir2, "Images", sep="")
-#file.rename(list.files(pattern="american-art-n09633_*.img",paste0("american-art-n09633_", 1:143)))
+file.rename(from=experiment_dir3,list.files(pattern="american-art-n09633_*.jpg",to=paste0("american-art-n09633_", 1:143)))
 rgb<-rgbfeature(img_dir2,"american-art-n09633")
 
-
-a<-"../data/Images/american-art-n09633_0001.jpg"
-readJPEG(a)
-
-length(list.files(paste0(img_dir2,"Images")))
-getwd()
 #rgb<-rgbfeature(img_dir2,"master-paintings-19th-century-european-n09600")
 ```
 

@@ -21,7 +21,7 @@ rgbfeature <- function(img_dir, img_name){
   library("EBImage")
   
   ### Count number of images
-  n_files <- length(list.files(paste0(img_dir,"Images")))
+  n_files <- length(list.files("/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/Images"))
   
   ### RGB feature extraction prep 
   nR <- 8 
