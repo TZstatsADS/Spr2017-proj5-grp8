@@ -27,6 +27,7 @@ h<-data.frame(h)
 file.names <- list.files(img_dir_full,pattern="*.jpg") 
 file.names
 
+file.names.short<-NULL
 for (i in 1:length(file.names)){
 file.names.short[i]<-substr(file.names[[i]],1,nchar(file.names[[1]])-4)
 }

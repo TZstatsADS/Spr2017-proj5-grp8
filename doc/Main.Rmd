@@ -1,0 +1,49 @@
+---
+title: "Main"
+author: "Vikas, Sean, Boxuan Zhao, Xuehan Liu"
+date: "4/26/2017"
+output: pdf_document
+---
+
+###Introduction
+In this project, we look at auction items' price on sotheby's.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images.
+
+
+
+###Step 1: Pull data from sotheby's (Sean)
+
+###Step 2: feature clean up and extractions 
+we have two 
+
+##Step 2a: Data clean-up and  (Boxuan)
+
+##Step 2b: Images feature extraction (Xuehan)
+In this step, I extracted HoG feature and RGB feature from the images that associate with each auction items. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+
+```{r}
+###HoG Features
+
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc")
+HoG<-read.csv("../doc/HoG.csv",header=T)[,-1]
+head(HoG)
+head(HoG[,ncol(HoG)])
+ 
+
+###RGB feature
+RGB<-read.csv("../doc/RGB.csv",header=T)[,-1]
+head(RGB)
+```
+
+Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
+
+```{r}
+
+```
+
+
+###Step 3: Fit the model and find those important features in order to predict auction price
+```{r}
+
+```
+
+###Conclusion
