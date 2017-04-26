@@ -14,6 +14,8 @@ setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 
 ###Step 1: Pull data from sotheby's (Sean)
 
+
+
 ###Step 2: feature clean up and extractions 
 We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
 
@@ -74,7 +76,7 @@ write.csv(data_full,file="data_full.csv")
 ```
 
 
-###Step 3: Fit the model and find those important features in order to predict auction price (Vikas)
+###Step 3: Fit the model and find those important features in order to predict auction price
 ```{r}
 #read in the cleaned up data
 data_full<-read.csv("../doc/data_full.csv")
