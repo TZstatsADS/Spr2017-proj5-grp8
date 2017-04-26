@@ -14,6 +14,11 @@ In this project, we look at auction items' price on sotheby's.com and try to pre
 
 ###Step 2: feature clean up and extractions 
 we have two 
+```{r}
+source("../lib/FeatureConstruction.R")
+#my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
+feature.1 = Feature.Construction(my.dat)#Construct the first type of features
+```
 
 ##Step 2a: Data clean-up and  (Boxuan)
 

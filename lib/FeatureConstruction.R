@@ -1,7 +1,7 @@
 #This is a function that read in raw data sets and output feature data file
 #input: my.dat is a n by m matrix, where n is the number of observations, and m is the possible features we can work on
 #my.dat = read.csv("../output/auctionItems.csv",header = TRUE)
-my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
+#my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
 
 Feature.Construction = function(my.dat){
   
