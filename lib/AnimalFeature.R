@@ -1,5 +1,4 @@
-setwd("../doc")
-
+#setwd("../doc")
 
 AnimalFeature = function(description_vector, title_vector)
 {

@@ -5,6 +5,12 @@
 
 Feature.Construction = function(my.dat){
   
+  #Process the animal features
+  source("../lib/AnimalFeature.R")
+  
+  Animal = AnimalFeature(description_vector=my.dat$lot_desc, title_vector=my.dat$title)
+  
+  
   #Signal words used to classify types
   History = c("Christ","Muhammad","Cross","Crusade","Jerusalem","Maria","Virgin","holy","Trinity","Judgement","God", "Jesus","Zeus",
               "Hera","Poseidon","Demeter","Ares","Athena","Apollo","Artemis","Hephaestus","Aphrodite","Hermes","Dionysus","Hades","Hypnos",
@@ -162,6 +168,7 @@ Feature.Construction = function(my.dat){
                     StillLife = variable.StillLife,
                     Abstract = variable.Abstract,
                     Other = variable.Other,
+                    Animal = Animal,
                     diff = variable.diff, 
                     famous = variable.famous, 
                     sold = variable.sold ,
@@ -170,4 +177,4 @@ Feature.Construction = function(my.dat){
 }
 
 #Feature = Feature.Construction(my.dat)
-#write.csv(Testing,file="../output/Feature.csv")
+#write.csv(Feature,file="../output/Feature.csv")
