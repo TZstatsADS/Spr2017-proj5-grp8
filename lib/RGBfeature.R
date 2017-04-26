@@ -1,4 +1,4 @@
-1 `#############################################################
+#############################################################
 ### Construct visual features for training/testing images ###
 #############################################################
 
@@ -21,7 +21,7 @@ rgbfeature <- function(img_dir, img_name){
   library("EBImage")
   
   ### Count number of images
-  n_files <- length(list.files("/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/Images"))
+  n_files <- length(list.files(img_dir))
   
   ### RGB feature extraction prep 
   nR <- 8 
@@ -47,7 +47,8 @@ rgbfeature <- function(img_dir, img_name){
   RGB_Feature <- as.data.frame(rgb_feature)
   
   ### output constructed features
-  save(RGB_Feature, file=paste0(img_dir,"/RGB_Feature.RData"))
+  img_dir_rgb<-"../output"
+  save(RGB_Feature, file=paste0(img_dir_rgb,"/RGB_Feature.RData"))
   return(RGB_Feature)
   
   

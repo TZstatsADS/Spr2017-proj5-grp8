@@ -43,18 +43,14 @@ rgb<-feature(img_dir)
 ###Extract RGB Features from images 
 
 ```{r}
-#setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8")
-source("/Users/xuehan/Desktop/Spr2017-proj5-grp8/lib/RGBfeature.R")
-dir <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/"
-experiment_dir3 <- "/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/"
-img_dir2 <- paste(experiment_dir3, "Images_full", sep="")
-
+source("../lib/RGBfeature.R")
+dir <- "../data/"
 img_dir_full <- paste(dir, "Images_full", sep="")
 
 file.names <- list.files(img_dir_full,pattern="*.jpg") 
 file.names
 
-rgb<-rgbfeature(img_dir2,file.names)
+rgb<-rgbfeature(img_dir_full,file.names)
 
 ```
 
