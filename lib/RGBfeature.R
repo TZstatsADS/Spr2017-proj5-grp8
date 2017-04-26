@@ -1,4 +1,4 @@
-#############################################################
+1 `#############################################################
 ### Construct visual features for training/testing images ###
 #############################################################
 
@@ -10,7 +10,7 @@ if(!require(EBImage)){
   library(EBImage)
 }
 
-feature <- function(img_dir, img_name){
+rgbfeature <- function(img_dir, img_name){
   
   ### Construct RGB features for training/testing images
   
@@ -21,7 +21,7 @@ feature <- function(img_dir, img_name){
   library("EBImage")
   
   ### Count number of images
-  n_files <- length(list.files(paste0(img_dir,"/TestImages")))
+  n_files <- length(list.files("/Users/xuehan/Desktop/Spr2017-proj5-grp8/data/Images"))
   
   ### RGB feature extraction prep 
   nR <- 8 
@@ -36,7 +36,7 @@ feature <- function(img_dir, img_name){
   
   ### Extract 800 RGB features
   for (i in 1:n_files){
-    mat <- imageData(readImage(paste0(img_dir,"/", img_name, "_", sprintf("%04s", i), ".jpg")))
+    mat <- imageData(readImage(paste0(img_dir,"/", img_name, "_", sprintf("%01s", i), ".jpg")))
     freq_rgb <- as.data.frame(table(factor(findInterval(mat[,,1], rBin), levels=1:nR), factor(findInterval(mat[,,2], gBin), levels=1:nG), factor(findInterval(mat[,,3], bBin), levels=1:nB)))
     rgb_feature[i,] <- as.numeric(freq_rgb$Freq)/(ncol(mat)*nrow(mat)) # normalization
   }

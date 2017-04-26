@@ -6,7 +6,7 @@
 ### Project 5, Team 8
 ### ADS Spring 2017
 
-feature <- function(img_dir, export=T){
+hogfeature <- function(img_dir, export=T){
   
   ### Construct process features for training/testing images
   
