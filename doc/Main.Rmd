@@ -41,7 +41,7 @@ Merge all sub-datasets that contain features together to generate a functional d
 ```
 
 
-###Step 3: Fit the model and find those important features in order to predict auction price
+###Step 3: Fit the model and find those important features in order to predict auction price (Vikas)
 ```{r}
 
 ```
