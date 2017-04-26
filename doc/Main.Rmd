@@ -15,8 +15,19 @@ setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 ###Step 1: Pull data from sotheby's (Sean)
 
 ###Step 2: feature clean up and extractions 
-we have two 
-We first extract useful information from the csv file we recieved from scraping from the website
+We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
+
+"auctionDate","auctionId","auctionName","currency","genre", "guaranteeLine","highEst","id","isSold","lowEst","medium","salePrice","title","type", "auctionYear", "lot_desc"
+
+We created categorical variables(1s and 0s) History, Portrait, Landscape, Genre, StillLife, Abstract, and Other from the column "type", in which we utilized regrular expressions to extract type for each paintings.
+
+In addition, we also created diff variable, which is estimated by the increased proportion from highEst and lowEst.
+
+More categorical variables, famous and sold, which record whether each painting is owned by famous people and whether it is sold, based on the information we extract from lot_desc and isSold.
+
+At last, we extract the height and width of the paintings from the lot_desc and form the final two features from our data set.
+
+In addition to the csv file, we have also created HOG feature as well as RGB feature from the paintings. 
 
 ##Step 2a: Data clean-up and  (Boxuan)
 ```{r}
