@@ -14,6 +14,8 @@ setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 
 ###Step 1: Pull data from sotheby's (Sean)
 
+
+
 ###Step 2: feature clean up and extractions 
 We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
 
@@ -36,22 +38,27 @@ source("../lib/FeatureConstruction.R")
 feature.1 = Feature.Construction(my.dat)#Construct the first type of features
 ```
 
-##Step 2b: Images feature extraction (Xuehan)
-In this step, I extracted HoG feature and RGB feature from the images that associate with each auction items. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+##Step 2b: Images feature extraction (Xuehan and Vikas)
+In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction items. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 ```{r}
 source(../lib/image_feature_extraction.R)#run this first
-###HoG Features
+###HoG Feature
 
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc")
 HoG<-read.csv("../doc/HoG.csv",header=T)[,-1]
 head(HoG)
 
 
-###RGB feature
+###RGB Feature
 RGB<-read.csv("../doc/RGB.csv",header=T)[,-1]
 head(RGB)
+
+###VGG Feature
+
+
 ```
+
 
 Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
 
@@ -69,7 +76,7 @@ write.csv(data_full,file="data_full.csv")
 ```
 
 
-###Step 3: Fit the model and find those important features in order to predict auction price (Vikas)
+###Step 3: Fit the model and find those important features in order to predict auction price
 ```{r}
 #read in the cleaned up data
 data_full<-read.csv("../doc/data_full.csv")
