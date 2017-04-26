@@ -7,7 +7,9 @@ output: pdf_document
 
 ###Introduction
 In this project, we look at auction items' price on sotheby's.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images.
-
+```{r}
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
+```
 
 
 ###Step 1: Pull data from sotheby's (Sean)
@@ -27,13 +29,13 @@ feature.1 = Feature.Construction(my.dat)#Construct the first type of features
 In this step, I extracted HoG feature and RGB feature from the images that associate with each auction items. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 ```{r}
+source(../lib/image_feature_extraction.R)#run this first
 ###HoG Features
 
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc")
 HoG<-read.csv("../doc/HoG.csv",header=T)[,-1]
 head(HoG)
-head(HoG[,ncol(HoG)])
- 
+
 
 ###RGB feature
 RGB<-read.csv("../doc/RGB.csv",header=T)[,-1]
@@ -43,13 +45,23 @@ head(RGB)
 Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
 
 ```{r}
-
+#Merge datasets by paintings' ID which is the last column
+head(HoG[,ncol(HoG)])
+colnames(HoG)[ncol(HoG)]<-"ID"
+head(RGB[,ncol(RGB)])
+colnames(RGB)[ncol(RGB)]<-"ID"
+feature<-read.csv("../output/Feature.csv")
+data.full<-merge(HoG,RGB,by.x="ID",by.y="ID")
+#store full data
+data_full<-merge(data.full,feature,by.x="ID",by.y="ID" )
+write.csv(data_full,file="data_full.csv")
 ```
 
 
 ###Step 3: Fit the model and find those important features in order to predict auction price (Vikas)
 ```{r}
-
+#read in the cleaned up data
+data_full<-read.csv("../doc/data_full.csv")
 ```
 
 ###Conclusion
