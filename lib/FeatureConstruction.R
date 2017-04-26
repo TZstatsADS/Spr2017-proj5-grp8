@@ -1,7 +1,7 @@
 #This is a function that read in raw data sets and output feature data file
 #input: my.dat is a n by m matrix, where n is the number of observations, and m is the possible features we can work on
-my.dat = read.csv("../output/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
-my.dat = read.csv("../output/testing.csv",header = TRUE, stringsAsFactors = FALSE)
+#my.dat = read.csv("../output/auctionItems.csv",header = TRUE)
+my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
 
 sum(apply(my.dat,1,is.null))
 Feature.Construction = function(my.dat,clean=F){
@@ -92,7 +92,7 @@ Feature.Construction = function(my.dat,clean=F){
   #######################
   
   ######################After data cleaning
-  variable.sold = ifelse(my.dat$isSold=="True",1,0)
+  variable.sold = ifelse(my.dat$isSold=="TRUE",1,0)
   ######################
   
   #lot-description
@@ -148,7 +148,8 @@ Feature.Construction = function(my.dat,clean=F){
     }
   }
   
-  return(data.frame(History = variable.History,
+  return(data.frame(ID = paste0(my.dat$auctionId,"_",my.dat$id),
+                    History = variable.History,
                     Portrait = variable.Portrait,
                     Landscape = variable.Landscape,
                     Genre = variable.Genre,
@@ -164,4 +165,4 @@ Feature.Construction = function(my.dat,clean=F){
 
 #varibale.type good      variable.diff good            sold good     variable.famous good
 Testing = Feature.Construction(my.dat,clean = T)
-write.csv(Testing,file="../output/TestingTTTT.csv")
+write.csv(Testing,file="../output/Testing_1.csv")
