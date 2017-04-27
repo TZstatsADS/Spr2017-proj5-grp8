@@ -36,7 +36,7 @@ rgbfeature <- function(img_dir, img_name){
   
   ### Extract 800 RGB features
   for (i in 1:n_files){
-    mat <- imageData(resize(readImage(paste0(img_dir, "/",img_name[[i]]))),100,100)
+    mat <- imageData(resize(readImage(paste0(img_dir, "/",img_name[[i]])),200,200))
     freq_rgb <- as.data.frame(table(factor(findInterval(mat[,,1], rBin), levels=1:nR), factor(findInterval(mat[,,2], gBin), levels=1:nG), factor(findInterval(mat[,,3], bBin), levels=1:nB)))
     rgb_feature[i,] <- as.numeric(freq_rgb$Freq)/(ncol(mat)*nrow(mat)) # normalization
   }

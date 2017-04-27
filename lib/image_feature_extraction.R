@@ -42,13 +42,13 @@ source("../lib/RGBfeature.R")
 #dir <- "../data/"
 #img_dir_full <- paste(dir, "Images_full", sep="")
 
-rgb<-rgbfeature(img_dir_full,file.names)
+rgb_feature<-rgbfeature(img_dir_full,file.names)
 
-rgb<-data.frame(rgb)
+rgb<-data.frame(rgb_feature)
 
 rgb$id<-file.names.short
 
-write.csv(rgb,file="RGB.csv") #stored under doc
+write.csv(rgb,file="../data/RGB.csv") #stored under doc
 
 
 
