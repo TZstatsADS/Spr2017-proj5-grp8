@@ -102,6 +102,8 @@ colnames(data.full)[56:567]<-paste("RGB",1:512,sep="")
 #store full data
 data_full<-merge(data.full,data.full1,by.x="ID",by.y="ID" )
 write.csv(data_full,file="../data/data_full.csv")
+
+
 ```
 
 
@@ -109,8 +111,17 @@ write.csv(data_full,file="../data/data_full.csv")
 ```{r}
 #read in the cleaned up data
 data_full<-read.csv("../data/data_full.csv")
+data<-read.csv("../data/auctionItems.csv")[,c(3,9,13)]
+data$Id<-paste0(data$auctionId,"_",data$id)
+data<-data[,-c(1,2)]
+data_full<-merge(data_full,data,by.x="ID",by.y="Id")
 ```
 
 ###Conclusion
 
+```{r}
+data_full_1<-data_full[1:500,]
+lm(salePrice~.,data_full[,-c(1,2)])
+
+```
 
