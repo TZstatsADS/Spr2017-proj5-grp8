@@ -34,8 +34,8 @@ In addition to the csv file, we have also created HOG feature as well as RGB fea
 ##Step 2a: Data clean-up and  (Boxuan)
 ```{r}
 source("../lib/FeatureConstruction.R")
-#my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
-feature.1 = Feature.Construction(my.dat)#Construct the first type of features
+my.dat = read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
+feature.csv = Feature.Construction(my.dat)#Construct the first type of features
 ```
 
 ##Step 2b: Images feature extraction (Xuehan and Vikas)
