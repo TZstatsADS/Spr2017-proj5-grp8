@@ -10,6 +10,7 @@ output: pdf_document
 In this project, we look at auction items' price on sothebys.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. We first scrap information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
 
 ```{r}
+#Package needed
 library(glmnet)
 install.packages("glmnet")
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
@@ -110,6 +111,8 @@ write.csv(data_full,file="../data/data_full.csv")
 
 
 ###Step 3: Fit the model and find those important features in order to predict auction price
+
+For this part, we first read in and clean the data, then we apply the regular regression method, which result in a non-satifiactory result. Therefore, we then start to implement penalized regression methods and achieve a much better results.
 ```{r}
 #read in the cleaned up data
 data_full<-read.csv("../data/data_full.csv")
@@ -119,38 +122,49 @@ data<-data[,-c(1,2)]
 data_full<-merge(data_full,data,by.x="ID",by.y="Id")
 colnames(data_full)[3:56]<-paste("HoG",1:54,sep="")
 colnames(data_full)[57:568]<-paste("RGB",1:512,sep="")
+
+####Regular regression methods:
+#We randomly split 25% of our data as testing data set:
+ind<-sample(1:dim(data_full)[1],dim(data_full)[1] * 0.25)
+test<-data_full[ind,]
+train<-data_full[-ind,]
+score<- lm(salePrice~.,train[,-c(1,2)])#regular regression
+regular.prediction = predict(score,test[,-c(1,2)])#Store predictions from regular regression model
+na.position = which(is.na(regular.prediction))#Locate na positions
+regular.prediction = regular.prediction[-na.position]#Remove all na predicitons from regular regression predictions
+
+#Produce statistics for comparison
+regular.summary = summary(predict(score,test[,-c(1,2)])-test$salePrice[-na.position])
+regular.mse = sum((regular.prediction-test$salePrice[-na.position])^2)
+
+####Advanced regression methods : LASSO Regression
+#We randomly split 25% of our data as testing data set:
+data_omit = na.omit(data_full)#Remove any rows that has na valuse in it
+data_omit = data_omit[,-c(1,2)]#Remove non-useful columns
+ind<-sample(1:dim(data_omit)[1],dim(data_omit)[1]*0.25)
+test<-data_omit[ind,]
+train<-data_omit[-ind,]
+lambda = cv.glmnet(as.matrix(train[,-c(580)]),as.matrix(train[,c(580)]),type.measure = "mse")$lambda.min#Cross validate to find the best lambda values
+score_lasso = glmnet(as.matrix(train[,-c(580)]),as.matrix(train[,c(580)]),family="gaussian",alpha=1,lambda = lambda)#Fit lasso model
+lasso.prediction = predict(score_lasso,as.matrix(test[,-c(580)]))#Prodce prediction
+
+#Produce statistics for comparison
+lasso.summary = summary(prediction - as.numeric(test[,580]))
+lasso.mse = mean((lasso.prediction-test[,-c(580)])^2)
 ```
 
 ###Conclusion
 
+So, we finally compare the results from two regression methods
 ```{r}
-data_full_1<-data_full[1:500,]
-score<- lm(salePrice~.,data_full[,-c(1,2)])
-ind<-sample(1:3000,750)
-test<-data_full[ind,]
-train<-data_full[-ind,]
-score<- lm(salePrice~.,train[,-c(1,2)])
-summary(predict(score,test[,-c(1,2)])-test$salePrice)
-hist(predict(score,test[,-c(1,2)])-test$salePrice)
-summary(test$salePrice)
+#Mse
+regular.mse
 
+lasso.mse
 
+#Summary Statistics
+regular.summary
 
-
-#data_full_1<-data_full[1:500,]
-#score<- lm(salePrice~.,data_full[,-c(1,2)])
-data_omit = na.omit(data_full)
-data_omit = data_omit[,-c(1,2)]
-data_omit = apply(data_omit,2,as.double)
-ind<-sample(1:dim(data_omit)[1],dim(data_omit)[1]*0.25)
-
-test<-data_omit[ind,]
-train<-data_omit[-ind,]
-#score_test = lm(train$salePrice~.,train[,569:581])
-score_lasso = glmnet(train[,-c(580,581)],train[,c(580)],family="gaussian",alpha=1)
-summary(predict(score_lasso,test[,-c(580,581)])-test[,580])
-
-length(predict(score_lasso,test[,-c(580,581)]))
-coef(score_lasso)
+lasso.summary
 ```
 
