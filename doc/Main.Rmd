@@ -1,19 +1,20 @@
 ---
 title: "Main"
-author: "Vikas, Sean, Boxuan Zhao, Xuehan Liu"
+author: "Vikas Arun(va2298), Xuehan Liu(xl2615), Sean Reddy(sr3336), Boxuan Zhao(bz2290)"
 date: "4/26/2017"
 output: pdf_document
 ---
 
 ###Introduction
-In this project, we look at auction items' price on sotheby's.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. 
+
+In this project, we look at auction items' price on sothebys.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. We first scrap information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
 
 ```{r}
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 ```
 
 
-###Step 1: Pull data from sotheby's (Sean)
+###Step 1: Pull data from sothebys.com
 
 
 
