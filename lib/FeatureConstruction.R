@@ -8,7 +8,7 @@ Feature.Construction = function(my.dat){
   #Process the animal features
   #source("../lib/AnimalFeature.R")
   
-  #Animal = AnimalFeature(description_vector=my.dat$lot_desc, title_vector=my.dat$title)
+  #Animal = AnimalFeature(description_vector=as.vector(my.dat$lot_desc), title_vector=as.vector(my.dat$title))
   
   
   #Signal words used to classify types
