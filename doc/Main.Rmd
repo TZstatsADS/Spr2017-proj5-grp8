@@ -61,15 +61,18 @@ data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ####Step 2b: Images feature extraction 
 In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
+Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. 
+
 ```{r}
-source(../lib/image_feature_extraction.R)#run this first
+#After downloading the images to your local path, please go to the "image_feature_extraction.R" and change "img_dir_full" to your local path (located after loading libraries).
+#Then run the following code
+source(../lib/image_feature_extraction.R)
 
 #If the above function took too long to run (3000 images), you can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four chuncks, meaning from the 1th to 500th, 501th to 1000th and so on.
 
 
 ###HoG Feature
 
-setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc")
 HoG<-read.csv("../data/HoG.csv",header=T)[,-1]
 head(HoG)
 

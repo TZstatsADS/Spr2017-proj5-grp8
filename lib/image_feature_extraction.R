@@ -1,28 +1,24 @@
-title: "Image Anlysis"
-author: "Xuehan Liu (xl2615)"
-date: "4/21/2017"
-output: pdf_document
 
 library(EBImage)
 #install.packages("jpeg")
 library(jpeg)
 library(OpenImageR)
 
-
+##########Your local path of 3000 images#################
+img_dir_full <- "/Users/xuehan/Desktop/Images/" 
+########################################################
 
 ###Extract HoG Features from images
 
 
 source("../lib/HOGFeature.R")
-#dir <- "../data/"
-#img_dir_full <- paste(dir, "Images_full/", sep="")
 
-img_dir_full <- "/Users/xuehan/Desktop/Images/" #local path of 3000 images
+
 h<-hogfeature(img_dir_full,export=T)
 h<-data.frame(h)
 
 file.names <- list.files(img_dir_full,pattern="*.jpg") 
-#file.names
+
 
 file.names.short<-NULL
 for (i in 1:length(file.names)){
