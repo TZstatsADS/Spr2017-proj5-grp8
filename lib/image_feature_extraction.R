@@ -30,7 +30,7 @@ for (i in 1:length(file.names)){
 }
 
 h$id<-file.names.short
-write.csv(h,file="HoG.csv")
+write.csv(h,file="../data/HoG.csv")
 #HoG.csv is under the doc 
 
 
