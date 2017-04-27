@@ -1,14 +1,14 @@
 #This is a function that read in raw data sets and output feature data file
 #input: my.dat is a n by m matrix, where n is the number of observations, and m is the possible features we can work on
-#my.dat = read.csv("../output/auctionItems.csv",header = TRUE)
+my.dat = read.csv("../data/auctionItems.csv",header = TRUE,stringsAsFactors = FALSE)
 #my.dat = read.csv("../output/AuctionItemsCleaned.csv",header = TRUE, stringsAsFactors = FALSE)
 
 Feature.Construction = function(my.dat){
   
   #Process the animal features
-  source("../lib/AnimalFeature.R")
+  #source("../lib/AnimalFeature.R")
   
-  Animal = AnimalFeature(description_vector=my.dat$lot_desc, title_vector=my.dat$title)
+  #Animal = AnimalFeature(description_vector=my.dat$lot_desc, title_vector=my.dat$title)
   
   
   #Signal words used to classify types
@@ -168,7 +168,7 @@ Feature.Construction = function(my.dat){
                     StillLife = variable.StillLife,
                     Abstract = variable.Abstract,
                     Other = variable.Other,
-                    Animal = Animal,
+                    #Animal = Animal,
                     diff = variable.diff, 
                     famous = variable.famous, 
                     sold = variable.sold ,
@@ -176,5 +176,5 @@ Feature.Construction = function(my.dat){
                     width = variable.width))
 }
 
-#Feature = Feature.Construction(my.dat)
+Feature = Feature.Construction(my.dat)
 #write.csv(Feature,file="../output/Feature.csv")
