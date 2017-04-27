@@ -14,8 +14,10 @@ library(OpenImageR)
 
 
 source("../lib/HOGFeature.R")
-dir <- "../data/"
-img_dir_full <- paste(dir, "Images_full/", sep="")
+#dir <- "../data/"
+#img_dir_full <- paste(dir, "Images_full/", sep="")
+
+img_dir_full <- "/Users/xuehan/Desktop/Images/" #local path of 3000 images
 h<-hogfeature(img_dir_full,export=T)
 h<-data.frame(h)
 
@@ -37,8 +39,8 @@ write.csv(h,file="HoG.csv")
 ###Extract RGB Features from images 
 
 source("../lib/RGBfeature.R")
-dir <- "../data/"
-img_dir_full <- paste(dir, "Images_full", sep="")
+#dir <- "../data/"
+#img_dir_full <- paste(dir, "Images_full", sep="")
 
 rgb<-rgbfeature(img_dir_full,file.names)
 

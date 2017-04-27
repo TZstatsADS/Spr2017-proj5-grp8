@@ -54,6 +54,8 @@ head(HoG)
 RGB<-read.csv("../doc/RGB.csv",header=T)[,-1]
 head(RGB)
 
+length(list.files("/Users/xuehan/Desktop/Images/"))
+
 ###VGG Feature
 
 
