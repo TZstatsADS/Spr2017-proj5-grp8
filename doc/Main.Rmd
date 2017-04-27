@@ -6,7 +6,8 @@ output: pdf_document
 ---
 
 ###Introduction
-In this project, we look at auction items' price on sotheby's.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images.
+In this project, we look at auction items' price on sotheby's.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. 
+
 ```{r}
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 ```
@@ -16,7 +17,7 @@ setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 
 
 
-###Step 2: feature clean up and extractions 
+###Step 2: Feature clean up and extractions 
 We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
 
 "auctionDate","auctionId","auctionName","currency","genre", "guaranteeLine","highEst","id","isSold","lowEst","medium","salePrice","title","type", "auctionYear", "lot_desc"
@@ -31,7 +32,7 @@ At last, we extract the height and width of the paintings from the lot_desc and 
 
 In addition to the csv file, we have also created HOG feature as well as RGB feature from the paintings. 
 
-##Step 2a: Data clean-up and  (Boxuan)
+####Step 2a: Data clean-up and feature extraction
 ```{r}
 source("../lib/FeatureConstruction.R")
 my.dat = read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
@@ -56,7 +57,7 @@ for (i in 1:nrow(animal)){
 data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ```
 
-##Step 2b: Images feature extraction (Xuehan and Vikas)
+####Step 2b: Images feature extraction 
 In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 ```{r}
@@ -82,8 +83,7 @@ head(RGB)
 
 ```
 
-
-Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
+####Step 2c: Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
 
 ```{r}
 #Merge datasets by paintings' ID which is the last column
@@ -108,3 +108,5 @@ data_full<-read.csv("../data/data_full.csv")
 ```
 
 ###Conclusion
+
+
