@@ -36,22 +36,44 @@ In addition to the csv file, we have also created HOG feature as well as RGB fea
 source("../lib/FeatureConstruction.R")
 my.dat = read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
 feature.csv = Feature.Construction(my.dat)#Construct the first type of features
+#dim(feature.csv)
+animal<-read.csv("../output/AnimalFeature.csv")
+colnames(animal)<-c("ID","animal")
+
+#Rename ID for each observations in the dataset
+img_dir_full <- "/Users/xuehan/Desktop/Images/" #local path of 3000 images
+file.names <- list.files(img_dir_full,pattern="*.jpg") 
+file.names.short<-NULL
+for (i in 1:length(file.names)){
+  file.names.short[i]<-substr(file.names[[i]],1,nchar(file.names[[i]])-4)
+}
+
+for (i in 1:nrow(animal)){
+  animal$ID[i]<-file.names.short[i]
+}
+
+#Merge two datasets
+data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ```
 
 ##Step 2b: Images feature extraction (Xuehan and Vikas)
-In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction items. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 ```{r}
 source(../lib/image_feature_extraction.R)#run this first
+
+#If the above function took too long to run (3000 images), you can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four chuncks, meaning from the 1th to 500th, 501th to 1000th and so on.
+
+
 ###HoG Feature
 
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc")
-HoG<-read.csv("../doc/HoG.csv",header=T)[,-1]
+HoG<-read.csv("../data/HoG.csv",header=T)[,-1]
 head(HoG)
 
 
 ###RGB Feature
-RGB<-read.csv("../doc/RGB.csv",header=T)[,-1]
+RGB<-read.csv("../data/RGB.csv",header=T)[,-1]
 head(RGB)
 
 
@@ -69,18 +91,20 @@ head(HoG[,ncol(HoG)])
 colnames(HoG)[ncol(HoG)]<-"ID"
 head(RGB[,ncol(RGB)])
 colnames(RGB)[ncol(RGB)]<-"ID"
-feature<-read.csv("../output/Feature.csv")
+
 data.full<-merge(HoG,RGB,by.x="ID",by.y="ID")
+colnames(data.full)[2:55]<-paste("HoG",1:54,sep="")
+colnames(data.full)[56:567]<-paste("RGB",1:512,sep="")
 #store full data
-data_full<-merge(data.full,feature,by.x="ID",by.y="ID" )
-write.csv(data_full,file="data_full.csv")
+data_full<-merge(data.full,data.full1,by.x="ID",by.y="ID" )
+write.csv(data_full,file="../data/data_full.csv")
 ```
 
 
 ###Step 3: Fit the model and find those important features in order to predict auction price
 ```{r}
 #read in the cleaned up data
-data_full<-read.csv("../doc/data_full.csv")
+data_full<-read.csv("../data/data_full.csv")
 ```
 
 ###Conclusion

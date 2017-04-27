@@ -42,9 +42,9 @@ rgbfeature <- function(img_dir, img_name){
   }
   
   ### Rename features
-  colnames(rgb_feature) <- paste0("RGB",1:512)
+ 
   
-  RGB_Feature <- as.data.frame(rgb_feature)
+  RGB_Feature <- data.frame(rgb_feature)
   
   ### output constructed features
   img_dir_rgb<-"../output"

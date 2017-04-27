@@ -69,12 +69,13 @@ for (i in 3001:3008){
   freq_rgb <- as.data.frame(table(factor(findInterval(mat[,,1], rBin), levels=1:nR), factor(findInterval(mat[,,2], gBin), levels=1:nG), factor(findInterval(mat[,,3], bBin), levels=1:nB)))
   rgb_feature[i,] <- as.numeric(freq_rgb$Freq)/(ncol(mat)*nrow(mat)) # normalization
 }
-### Rename features
-colnames(rgb_feature) <- paste0("RGB",1:512)
 
-RGB_Feature <- as.data.frame(rgb_feature)
+### Rename features
+
+
+RGB_Feature <- data.frame(rgb_feature)
 
 ### output constructed features
 img_dir_rgb<-"../output"
 save(RGB_Feature, file=paste0(img_dir_rgb,"/RGB_Feature.RData"))
-RGB_Feature
+
