@@ -1,0 +1,156 @@
+---
+title: "Main"
+author: "Vikas Arun(va2298), Xuehan Liu(xl2615), Sean Reddy(sr3336), Boxuan Zhao(bz2290)"
+date: "4/26/2017"
+output: pdf_document
+---
+
+###Introduction
+
+In this project, we look at auction items' price on sothebys.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. We first scrap information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
+
+```{r}
+library(glmnet)
+install.packages("glmnet")
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
+```
+
+
+###Step 1: Pull data from sothebys.com
+
+
+
+###Step 2: Feature clean up and extractions 
+We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
+
+"auctionDate","auctionId","auctionName","currency","genre", "guaranteeLine","highEst","id","isSold","lowEst","medium","salePrice","title","type", "auctionYear", "lot_desc"
+
+We created categorical variables(1s and 0s) History, Portrait, Landscape, Genre, StillLife, Abstract, and Other from the column "type", in which we utilized regrular expressions to extract type for each paintings.
+
+In addition, we also created diff variable, which is estimated by the increased proportion from highEst and lowEst.
+
+More categorical variables, famous and sold, which record whether each painting is owned by famous people and whether it is sold, based on the information we extract from lot_desc and isSold.
+
+At last, we extract the height and width of the paintings from the lot_desc and form the final two features from our data set.
+
+In addition to the csv file, we have also created HOG feature as well as RGB feature from the paintings. 
+
+####Step 2a: Data clean-up and feature extraction
+```{r}
+source("../lib/FeatureConstruction.R")
+my.dat = read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
+feature.csv = Feature.Construction(my.dat)#Construct the first type of features
+#dim(feature.csv)
+animal<-read.csv("../output/AnimalFeature.csv")
+colnames(animal)<-c("ID","animal")
+
+#Rename ID for each observations in the dataset
+img_dir_full <- "/Users/xuehan/Desktop/Images/" #local path of 3000 images
+file.names <- list.files(img_dir_full,pattern="*.jpg") 
+file.names.short<-NULL
+for (i in 1:length(file.names)){
+  file.names.short[i]<-substr(file.names[[i]],1,nchar(file.names[[i]])-4)
+}
+
+for (i in 1:nrow(animal)){
+  animal$ID[i]<-file.names.short[i]
+}
+
+#Merge two datasets
+data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
+```
+
+####Step 2b: Images feature extraction 
+In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+
+Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. 
+
+```{r}
+#After downloading the images to your local path, please go to the "image_feature_extraction.R" and change "img_dir_full" to your local path (located after loading libraries).
+#Then run the following code
+source(../lib/image_feature_extraction.R)
+
+#If the above function took too long to run (3000 images), you can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four chuncks, meaning from the 1th to 500th, 501th to 1000th and so on.
+
+
+###HoG Feature
+
+HoG<-read.csv("../data/HoG.csv",header=T)[,-1]
+head(HoG)
+
+
+###RGB Feature
+RGB<-read.csv("../data/RGB.csv",header=T)[,-1]
+head(RGB)
+
+
+###VGG Feature
+
+
+```
+
+####Step 2c: Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
+
+```{r}
+#Merge datasets by paintings' ID which is the last column
+head(HoG[,ncol(HoG)])
+colnames(HoG)[ncol(HoG)]<-"ID"
+head(RGB[,ncol(RGB)])
+colnames(RGB)[ncol(RGB)]<-"ID"
+
+data.full<-merge(HoG,RGB,by.x="ID",by.y="ID")
+colnames(data.full)[2:55]<-paste("HoG",1:54,sep="")
+colnames(data.full)[56:567]<-paste("RGB",1:512,sep="")
+#store full data
+data_full<-merge(data.full,data.full1,by.x="ID",by.y="ID" )
+write.csv(data_full,file="../data/data_full.csv")
+
+
+```
+
+
+###Step 3: Fit the model and find those important features in order to predict auction price
+```{r}
+#read in the cleaned up data
+data_full<-read.csv("../data/data_full.csv")
+data<-read.csv("../data/auctionItems.csv")[,c(3,9,13)]
+data$Id<-paste0(data$auctionId,"_",data$id)
+data<-data[,-c(1,2)]
+data_full<-merge(data_full,data,by.x="ID",by.y="Id")
+colnames(data_full)[3:56]<-paste("HoG",1:54,sep="")
+colnames(data_full)[57:568]<-paste("RGB",1:512,sep="")
+```
+
+###Conclusion
+
+```{r}
+data_full_1<-data_full[1:500,]
+score<- lm(salePrice~.,data_full[,-c(1,2)])
+ind<-sample(1:3000,750)
+test<-data_full[ind,]
+train<-data_full[-ind,]
+score<- lm(salePrice~.,train[,-c(1,2)])
+summary(predict(score,test[,-c(1,2)])-test$salePrice)
+hist(predict(score,test[,-c(1,2)])-test$salePrice)
+summary(test$salePrice)
+
+
+
+
+#data_full_1<-data_full[1:500,]
+#score<- lm(salePrice~.,data_full[,-c(1,2)])
+data_omit = na.omit(data_full)
+data_omit = data_omit[,-c(1,2)]
+data_omit = apply(data_omit,2,as.double)
+ind<-sample(1:dim(data_omit)[1],dim(data_omit)[1]*0.25)
+
+test<-data_omit[ind,]
+train<-data_omit[-ind,]
+#score_test = lm(train$salePrice~.,train[,569:581])
+score_lasso = glmnet(train[,-c(580,581)],train[,c(580)],family="gaussian",alpha=1)
+summary(predict(score_lasso,test[,-c(580,581)])-test[,580])
+
+length(predict(score_lasso,test[,-c(580,581)]))
+coef(score_lasso)
+```
+

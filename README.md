@@ -3,13 +3,13 @@
 Term: Spring 2017
 
 + Team 8
-+ Projec title: Lorem ipsum dolor sit amet
++ Projec title: Auction Prices Prediction
 + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-+ Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	+ team member 1 : Vikas Arun (va2298)
+	+ team member 2 : Xuehan Liu (xl2615)
+	+ team member 3 : Sean Reddy (sr3336)
+	+ team member 4 : Boxuan Zhao (bz2290)
++ Project summary: In this project, our team utlized the information as well as the object itself of 5000 painting on Sotheby's website to try to build a model to predict the auction prices from the info we have fro now.
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
