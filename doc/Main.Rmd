@@ -32,14 +32,13 @@ We scraped information from Sotheby's website and the initial features we have f
 
 "auctionDate","auctionId","auctionName","currency","genre", "guaranteeLine","highEst","id","isSold","lowEst","medium","salePrice","title","type", "auctionYear", "lot_desc"
 
-We created categorical variables(1s and 0s) History, Portrait, Landscape, Genre, StillLife, Abstract, and Other from the column "type", in which we utilized regrular expressions to extract type for each paintings.
+##Binary Categorical Variables
+We created categorical variables(1s and 0s) "History", "Portrait", "Landscape", "Genre", "StillLife", Abstract, and "Other" from the column "type", in which we utilized regrular expressions to extract type for each paintings. In addition we created a variable called "Animal", which indicates whether the title or description contains any reference to a major animal. Finally, we created the variables "famous"" and "sold"", which record whether each painting is owned by famous people and whether it is sold, based on the information we extract from lot_desc and isSold
 
-In addition, we also created diff variable, which is estimated by the increased proportion from highEst and lowEst.
+##Continuous Variables
+We created diff variable, which is estimated by the increased proportion from highEst and lowEst. Finally, we extract the height and width of the paintings from the lot_desc and form the final two features from our data set.
 
-More categorical variables, famous and sold, which record whether each painting is owned by famous people and whether it is sold, based on the information we extract from lot_desc and isSold.
-
-At last, we extract the height and width of the paintings from the lot_desc and form the final two features from our data set.
-
+##Image Variables
 In addition to the csv file, we have also created HOG feature as well as RGB feature from the paintings. 
 
 ####Step 2a: Data clean-up and feature extraction
@@ -68,9 +67,9 @@ data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ```
 
 ####Step 2b: Images feature extraction 
-In this step, I extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+In this step, we extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
-Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. 
+Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. Finally, please note that VGG features can be extracted using the "VGG Model.ipynb" file and opening it with Jupyter Notebook. The VGG model is a pretrained model from the tensorflow package, also installed under the /lib folder. These features, while extractable using the above code, were not used in the final algorithm since VGG takes ~10 min per image to extract features.
 
 ```{r}
 #After downloading the images to your local path, please go to the "image_feature_extraction.R" and change "img_dir_full" to your local path (located after loading libraries).
@@ -95,6 +94,7 @@ head(RGB)
 
 ####Step 2c: Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
 
+The dataset we created does not have the sale price, so we merge our dataset back with the original file in order to retrived the sale price. We use the auction ID and item ID combination as the key to join the datasets.
 ```{r}
 #Merge datasets by paintings' ID which is the last column
 head(HoG[,ncol(HoG)])
@@ -115,7 +115,7 @@ write.csv(data_full,file="../data/data_full.csv")
 
 ###Step 3: Fit the model and find those important features in order to predict auction price
 
-For this part, we first read in and clean the data, then we apply the regular regression method, which result in a non-satifiactory result. Therefore, we then start to implement penalized regression methods and achieve a much better results.
+For this part, we first read in and clean the data, then we apply the regular linear regression method, which result in a non-satifiactory result. The reason it does not result in a satisfactory result is that the vast majority of the features are not useful in predicting the y variable, and simply add variance. Therefore, we then implement Lasso regression and achieve a much better results.
 ```{r}
 #read in the cleaned up data
 data_full<-read.csv("../data/data_full.csv")
@@ -170,4 +170,4 @@ regular.summary
 
 lasso.summary
 ```
-
+You can see that the Mean/Median residual is much more reasonable for the lasso model than the standard linear regression model. You will also notice that the MSE is much lower for lasso than standard linear regression. This is useful both from a prediction point of view but also from an interpretability point of view, as it allows us to focus on a small number of features that are useful in predicting painting prices, and extrpolate insight from those features. 
