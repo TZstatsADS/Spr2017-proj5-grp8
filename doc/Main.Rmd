@@ -3,8 +3,9 @@ title: "Main"
 author: "Vikas Arun(va2298), Xuehan Liu(xl2615), Sean Reddy(sr3336), Boxuan Zhao(bz2290)"
 date: "4/26/2017"
 output:
-  word_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 ###Introduction
@@ -52,8 +53,11 @@ feature.csv = Feature.Construction(my.dat)#Construct the first type of features
 animal<-read.csv("../output/AnimalFeature.csv")
 colnames(animal)<-c("ID","animal")
 
+#In the following step, we use the images' captions to rename the observations' ID
+#Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. After downloading the images to your local path, please go to the "image_feature_extraction.R" and change "img_dir_full" to your local path (located after loading libraries).
+
 #Rename ID for each observations in the dataset
-img_dir_full <- "/Users/xuehan/Desktop/Images/" #local path of 3000 images
+img_dir_full <- "/Users/xuehan/Desktop/Images/" #change to your local path of 3000 images
 file.names <- list.files(img_dir_full,pattern="*.jpg") 
 file.names.short<-NULL
 for (i in 1:length(file.names)){
@@ -103,7 +107,7 @@ head(RGB)
 ####Step 2c: Merge all sub-datasets that contain features together to generate a functional dataset with full features for model fitting.
 
 The dataset we created does not have the sale price, so we merge our dataset back with the original file in order to retrived the sale price. We use the auction ID and item ID combination as the key to join the datasets.
-```{r}
+```{r,warning=FALSE}
 #Merge datasets by paintings' ID which is the last column
 head(HoG[,ncol(HoG)])
 colnames(HoG)[ncol(HoG)]<-"ID"
@@ -124,7 +128,7 @@ write.csv(data_full,file="../data/data_full.csv")
 ###Step 3: Fit the model and find those important features in order to predict auction price
 
 For this part, we first read in and clean the data, then we apply the regular linear regression method, which result in a non-satifiactory result. The reason it does not result in a satisfactory result is that the vast majority of the features are not useful in predicting the y variable, and simply add variance. Therefore, we then implement Lasso regression and achieve a much better results.
-```{r}
+```{r,warning=FALSE}
 #read in the cleaned up data
 data_full<-read.csv("../data/data_full.csv")
 data<-read.csv("../data/auctionItems.csv")[,c(3,9,13)]
