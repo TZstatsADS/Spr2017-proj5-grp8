@@ -1,7 +1,7 @@
 ---
 title: "Main"
 author: "Vikas Arun(va2298), Xuehan Liu(xl2615), Sean Reddy(sr3336), Boxuan Zhao(bz2290)"
-date: "4/26/2017"
+date: "4/28/2017"
 output:
   pdf_document: default
   html_document: default
@@ -12,16 +12,31 @@ output:
 
 In this project, we look at auction items' price on sothebys.com and focus on trying to predict the sale price of paintings auctioned on the website. Inspiration for the project comes for the inaccuracy of the predictions presented on Sotheby's site. In order to predict the price we perform text mining on all the text describing the painting, as well as image analysis on the image of the painting itself. We first scrape information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
 
+
 ###Step 0: Install and Import Relevant Packages
 
 Changed the working directory to the /doc folder on your local machine.
-```{r}
+```{r,warning=FALSE}
 #Package needed
-library(glmnet)
-#install.packages("glmnet")
-#intall.packages("Hmisc")
-library("Hmisc")
-setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
+list.of.packages = c("glmnet","Hmisc","jpeg","OpenImageR","EBImage")
+
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+
+if(length(new.packages))
+{
+  install.packages(new.packages)
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("EBImage")
+}
+
+suppressMessages(library(glmnet))
+suppressMessages(library(Hmisc))
+suppressMessages(library(EBImage))
+suppressMessages(library(jpeg))
+suppressMessages(library(OpenImageR))
+
+
+setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/lib") #Please change to your local path
 ```
 
 
@@ -45,7 +60,7 @@ We created diff variable, which is estimated by the increased proportion from hi
 In addition to the csv file, we have also created HOG feature as well as RGB feature from the paintings. 
 
 ####Step 2a: Data clean-up and feature extraction
-```{r}
+```{r,warning=FALSE}
 source("../lib/FeatureConstruction.R")
 my.dat = read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)
 feature.csv = Feature.Construction(my.dat)#Construct the first type of features
@@ -73,7 +88,7 @@ data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ```
 
 ####Step 2b: Images feature extraction 
-In this step, we extracted HoG feature, RGB feature and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+In this step, we extracted HoG feature and RGB feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. Finally, please note that VGG features can be extracted using the "VGG Model.ipynb" file and opening it with Jupyter Notebook. The VGG model is a pretrained model from the tensorflow package, also installed under the /lib folder. These features, while extractable using the above code, were not used in the final algorithm since VGG takes ~10 min per image to extract features.
 
@@ -86,20 +101,22 @@ Notice that the images we used are too large too upload on Gitgub. Alternatively
 
 
 
-#The above function will take approximately 3 hours to run. So I did not 
+#The above file will take approximately 3 hours to run. Basically, it will generate two csv files for HoG (HoG.csv) and RGB (RGB.csv) features. This two files are also uploaded under the data folder. 
 
-#If the above function took too long to run (3000 images), you can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four chuncks, meaning from the 1th to 500th, 501th to 1000th and so on.
+#You can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four steps (four for loops to make sure it is actually running), meaning from the 1th to 500th, 501th to 1000th and so on.
 
 
 ###HoG Feature
 
 HoG<-read.csv("../data/HoG.csv",header=T)[,-1]
-head(HoG)
+
+#head(HoG)
 
 
 ###RGB Feature
 RGB<-read.csv("../data/RGB.csv",header=T)[,-1]
-head(RGB)
+
+#head(RGB)
 
 
 ```
@@ -125,66 +142,69 @@ write.csv(data_full,file="../data/data_full.csv")
 ```
 
 
+
 ###Step 3: Fit the model and find those important features in order to predict auction price
 
 For this part, we first read in and clean the data, then we apply the regular linear regression method, which result in a non-satifiactory result. The reason it does not result in a satisfactory result is that the vast majority of the features are not useful in predicting the y variable, and simply add variance. Therefore, we then implement Lasso regression and achieve a much better results.
 ```{r,warning=FALSE}
 #read in the cleaned up data
-data_full<-read.csv("../data/data_full.csv")
-data<-read.csv("../data/auctionItems.csv")[,c(3,9,13)]
+data_full<-read.csv("../data/data_full.csv",header = TRUE, stringsAsFactors = FALSE)
+data<-read.csv("../data/auctionItems.csv",header = TRUE, stringsAsFactors = FALSE)[,c(3,9,13)]
 data$Id<-paste0(data$auctionId,"_",data$id)
 data<-data[,-c(1,2)]
 data_full<-merge(data_full,data,by.x="ID",by.y="Id")
 colnames(data_full)[3:56]<-paste("HoG",1:54,sep="")
 colnames(data_full)[57:568]<-paste("RGB",1:512,sep="")
+data_full = data_full[,-c(1,2)]
 
 ####Regular regression methods:
 #We randomly split 25% of our data as testing data set:
 ind<-sample(1:dim(data_full)[1],dim(data_full)[1] * 0.25)
 test<-data_full[ind,]
 train<-data_full[-ind,]
-score<- lm(salePrice~.,train[,-c(1,2)])#regular regression
-regular.prediction = predict(score,test[,-c(1,2)])#Store predictions from regular regression model
+score<- lm(salePrice~.,train)#regular regression
+regular.prediction = predict(score,test[,-c(580)])#Store predictions from regular regression model
 na.position = which(is.na(regular.prediction))#Locate na positions
 regular.prediction = regular.prediction[-na.position]#Remove all na predicitons from regular regression predictions
 
 #Produce statistics for comparison
-regular.summary = summary(predict(score,test[,-c(1,2)])-test$salePrice[-na.position])
-regular.mse = sum((regular.prediction-test$salePrice[-na.position])^2)
+regular.summary = summary(regular.prediction-as.numeric(test$salePrice)[-na.position])
+regular.mse = sum((regular.prediction-as.numeric(test$salePrice)[-na.position])^2)
 
 ####Advanced regression methods : LASSO Regression
 #We randomly split 25% of our data as testing data set:
 data_omit = na.omit(data_full)#Remove any rows that has na valuse in it
-data_omit = data_omit[,-c(1,2)]#Remove non-useful columns
+data_omit$salePrice = as.numeric(data_omit$salePrice)#Convert the character into numerical value
 ind<-sample(1:dim(data_omit)[1],dim(data_omit)[1]*0.25)
 test<-data_omit[ind,]
 train<-data_omit[-ind,]
-lambda = cv.glmnet(as.matrix(train[,-c(580)]),as.matrix(train[,c(580)]),type.measure = "mse")$lambda.min#Cross validate to find the best lambda values
-score_lasso = glmnet(as.matrix(train[,-c(580)]),as.matrix(train[,c(580)]),family="gaussian",alpha=1,lambda = lambda)#Fit lasso model
+lambda = cv.glmnet(x=as.matrix(train[,1:579]),y=train[,580],type.measure = "mse")$lambda.min#Cross validate to find the best lambda values
+score_lasso = glmnet(as.matrix(train[,1:579]),as.matrix(train[,580]),family="gaussian",alpha = 1, lambda = lambda)#Fit lasso model
 lasso.prediction = predict(score_lasso,as.matrix(test[,-c(580)]))#Prodce prediction
 
 #Produce statistics for comparison
-lasso.summary = summary(prediction - as.numeric(test[,580]))
-lasso.mse = mean((lasso.prediction-test[,-c(580)])^2)
+lasso.summary = summary(lasso.prediction - as.numeric(test[,580]))
+lasso.mse = mean((lasso.prediction-test[,c(580)])^2)
 ```
 
-###Conclusion
+###Compare statistics summary for two models
 
-So, we finally compare the results from two regression methods
 ```{r}
-#Mse
+#mse
 regular.mse
 
 lasso.mse
 
-#Summary Statistics
+#summary
 regular.summary
 
 lasso.summary
+
 ```
-<<<<<<< HEAD
+
+The MSE above of regular regression get reduced almost 
 
 Based on the statistics summary above, the lasso regression is much better than the regular regression. The "best" model for predicting the auction price should be the lasso regression. 
-=======
+
 You can see that the Mean/Median residual is much more reasonable for the lasso model than the standard linear regression model. You will also notice that the MSE is much lower for lasso than standard linear regression. This is useful both from a prediction point of view but also from an interpretability point of view, as it allows us to focus on a small number of features that are useful in predicting painting prices, and extrpolate insight from those features. 
->>>>>>> origin/master
+
