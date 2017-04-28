@@ -88,7 +88,7 @@ data.full1<-merge(feature.csv,animal,by.x="ID",by.y="ID")
 ```
 
 ####Step 2b: Images feature extraction 
-In this step, we extracted HoG feature and RGB feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
+In this step, we extracted HoG, RGB and VGG feature from the images that associate with each auction item. Since most of our observations are paintings, it makes sense that we extract information from those paintings directly. 
 
 Notice that the images we used are too large too upload on Gitgub. Alternatively, all 3000 images are in the Google drive (https://drive.google.com/drive/folders/0BzExzKbmVUJ2R3dsYUVYUXNvMVk?usp=sharing). Images are stored seperated in three different files (image_2500,image_5000, and image_7000). If you are interested in reproduce this project, please download them and move them all in the same folder for future use. Anyone with a LionMail should be able to access the google drive folder. Finally, please note that VGG features can be extracted using the "VGG Model.ipynb" file and opening it with Jupyter Notebook. The VGG model is a pretrained model from the tensorflow package, also installed under the /lib folder. These features, while extractable using the above code, were not used in the final algorithm since VGG takes ~10 min per image to extract features.
 
