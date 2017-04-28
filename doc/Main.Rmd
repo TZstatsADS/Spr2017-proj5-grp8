@@ -7,12 +7,17 @@ output: pdf_document
 
 ###Introduction
 
-In this project, we look at auction items' price on sothebys.com and try to predict the actual auction price based on some features provided in the websites, including genre, period the painting generated, as well as features from images. We first scrap information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
+In this project, we look at auction items' price on sothebys.com and focus on trying to predict the sale price of paintings auctioned on the website. Inspiration for the project comes for the inaccuracy of the predictions presented on Sotheby's site. In order to predict the price we perform text mining on all the text describing the painting, as well as image analysis on the image of the painting itself. We first scrape information, including descriptions and images of each items, and then do cleaning-up and image feature extraction. After obtaining all the features, we fit a model and fit it to our dataset with features.  
 
+###Step 0: Install and Import Relevant Packages
+
+Changed the working directory to the /doc folder on your local machine.
 ```{r}
 #Package needed
 library(glmnet)
 install.packages("glmnet")
+intall.packages("Hmisc")
+library("Hmisc")
 setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 ```
 
