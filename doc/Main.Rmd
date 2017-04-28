@@ -75,7 +75,7 @@ Notice that the images we used are too large too upload on Gitgub. Alternatively
 ```{r}
 #After downloading the images to your local path, please go to the "image_feature_extraction.R" and change "img_dir_full" to your local path (located after loading libraries).
 #Then run the following code
-source(../lib/image_feature_extraction.R)
+source(../lib/"image_feature_extraction.R")
 
 #If the above function took too long to run (3000 images), you can manually run rgb_seperate.R under doc folder. It generates the whole 3000 by 512 matrix in four chuncks, meaning from the 1th to 500th, 501th to 1000th and so on.
 
@@ -89,9 +89,6 @@ head(HoG)
 ###RGB Feature
 RGB<-read.csv("../data/RGB.csv",header=T)[,-1]
 head(RGB)
-
-
-###VGG Feature
 
 
 ```
