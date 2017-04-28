@@ -24,10 +24,11 @@ setwd("/Users/xuehan/Desktop/Spr2017-proj5-grp8/doc") #change to your local path
 
 ###Step 1: Pull data from sothebys.com
 
+The Sothebys web scraping program was written in Python and can be accessed through "GoldDust_1.0.ipynb", and viewing the file through a Jupyter Notebook. The information was scraped by going to each auction page, downloading the item names, and then navigating to each item page to download the title, image, description, sale price, predicted price, and many other features. These items were outputted to two places. The text data was outputted to "auctionItems.csv" in the /data folder and the images were outputted to "Images_full", also in the /data folder. We scraped ~3000 painting items from Sothebys, however Sotheby's classification of auctions isn't perfect, so the data didn't contain solely paintings.
 
 
 ###Step 2: Feature clean up and extractions 
-We scrpaed information from Sotheby's website and the initial features we have from the csv file are the following:
+We scraped information from Sotheby's website and the initial features we have from the csv file are the following:
 
 "auctionDate","auctionId","auctionName","currency","genre", "guaranteeLine","highEst","id","isSold","lowEst","medium","salePrice","title","type", "auctionYear", "lot_desc"
 
